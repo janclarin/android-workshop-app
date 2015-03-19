@@ -28,8 +28,8 @@ public class MainActivity extends ActionBarActivity {
     private EditText etNewTask;
     private Button btnAddTask;
 
-    private ArrayList<String> listTasks;
-    private ArrayAdapter<String> adapterTasks;
+    private ArrayList<String> listTasks; // Maintains the list of tasks.
+    private ArrayAdapter<String> adapterTasks; // Maintains views of each task for the list view.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +42,10 @@ public class MainActivity extends ActionBarActivity {
         btnAddTask = (Button) findViewById(R.id.btn_add_task);
 
         readTasks(); // Reads the tasks from the tasks file.
+
+        // Initialize adapter for list view with a built-in list item layout.
+        adapterTasks = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listTasks);
+
         setupButton(); // Sets up the button's on click listeners.
         setupListView(); // Sets up the list view, i.e. populating it.
     }
@@ -63,9 +67,7 @@ public class MainActivity extends ActionBarActivity {
      * Sets up the list view and its on click listeners.
      */
     private void setupListView() {
-        // Initialize adapter for list view with a built-in list item layout.
-        adapterTasks = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listTasks);
-
+        // Sets the list view's adapter.
         lvTasks.setAdapter(adapterTasks);
 
         // Set on item long click listener for tasks list view.
@@ -75,6 +77,7 @@ public class MainActivity extends ActionBarActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // Removes the task from the list of tasks.
                 listTasks.remove(position);
+
                 // Writes tasks to the file.
                 writeTasks();
 
@@ -88,17 +91,23 @@ public class MainActivity extends ActionBarActivity {
         lvTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get the task you
+                // Get the task you clicked.
                 String taskText = listTasks.get(position);
+
+                // Initialize an intent to open a new Task Activity.
                 Intent intent = new Intent(MainActivity.this, TaskActivity.class);
+
+                // Adds the task's text to the intent so the Task Activity can use it.
                 intent.putExtra("TASK", taskText);
+
+                // Starts the activity with the intent.
                 startActivity(intent);
             }
         });
     }
 
     /**
-     * Adds a new task.
+     * Adds a new task and refreshes the list view with the new task.
      */
     private void addNewTask() {
         String task = etNewTask.getText().toString();
@@ -116,6 +125,7 @@ public class MainActivity extends ActionBarActivity {
             // Tells the list view to refresh.
             adapterTasks.notifyDataSetChanged();
         } else {
+            // Displays a message "No task" if the task is empty.
             Toast toast = Toast.makeText(MainActivity.this, "No task", Toast.LENGTH_SHORT);
             toast.show();
         }
@@ -125,11 +135,14 @@ public class MainActivity extends ActionBarActivity {
      * Reads tasks to the tasks text file.
      */
     private void readTasks() {
-        File fileDir = getFilesDir();
-        File tasksFile = new File(fileDir, "tasks.txt");
+        File fileDir = getFilesDir(); // Get the directory to put the text file.
+        File tasksFile = new File(fileDir, "tasks.txt"); // Get a pointer to the file.
         try {
+            // Initialize the list of tasks based on the lines of the file.
+            // Each line is a task.
             listTasks = new ArrayList<>(FileUtils.readLines(tasksFile));
         } catch (IOException e) {
+            // If there is an error in reading the file, just initialize it to an empty list.
             listTasks = new ArrayList<>();
         }
     }
@@ -138,9 +151,10 @@ public class MainActivity extends ActionBarActivity {
      * Writes tasks to the tasks text file.
      */
     private void writeTasks() {
-        File fileDir = getFilesDir();
-        File tasksFile = new File(fileDir, "tasks.txt");
+        File fileDir = getFilesDir(); // Get the directory to put the text file.
+        File tasksFile = new File(fileDir, "tasks.txt"); // Get a pointer to the text file.
         try {
+            // Writes each task as a line in the text file.
             FileUtils.writeLines(tasksFile, listTasks);
         } catch (IOException e) {
             e.printStackTrace();
