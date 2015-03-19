@@ -36,10 +36,20 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Find the views from the layout so we can call functions on them.
         lvTasks = (ListView) findViewById(R.id.lv_tasks);
         etNewTask = (EditText) findViewById(R.id.et_new_task);
         btnAddTask = (Button) findViewById(R.id.btn_add_task);
 
+        readTasks(); // Reads the tasks from the tasks file.
+        setupButton(); // Sets up the button's on click listeners.
+        setupListView(); // Sets up the list view, i.e. populating it.
+    }
+
+    /**
+     * Sets up the add task button's on click listener.
+     */
+    private void setupButton() {
         // Set the on click listener for the add task button.
         btnAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,9 +57,12 @@ public class MainActivity extends ActionBarActivity {
                 addNewTask();
             }
         });
+    }
 
-        readTasks();
-
+    /**
+     * Sets up the list view and its on click listeners.
+     */
+    private void setupListView() {
         // Initialize adapter for list view with a built-in list item layout.
         adapterTasks = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listTasks);
 
