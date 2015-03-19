@@ -1,0 +1,41 @@
+#Windows thumbnail database
+Thumbs.db
+
+# OS X folder attribute file
+.DS_Store
+
+# Built application files
+*.apk
+*.ap_
+
+# Files for the Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Idea iml files
+*.iml
+
+# Generated files
+bin/
+gen/
+
+# Grade cache
+.gradle/
+build/
+
+# Local configuration file
+local.properties
+
+# Local IDEA workspace
+.idea
+#.idea/libraries
+#.idea/workspace.xml
+#.idea/tasks.xml
+
+# Log files
+*.log
+
+# Material design icons
+material-design-icons/
